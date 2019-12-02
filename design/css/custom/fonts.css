@@ -1,0 +1,28 @@
+/* Custom Fonts */
+@font-face {
+    font-family: 'Cookie Regular';
+    font-style: normal;
+    font-weight: 900;
+    src: url(../fonts/Cookie-Regular.ttf);
+}
+
+@font-face {
+    font-family: 'Dancing Script Bold';
+    font-style: normal;
+    font-weight: 900;
+    src: url(../fonts/DancingScript-Bold.ttf);
+}
+
+@font-face {
+    font-family: 'Dancing Script Regular';
+    font-style: normal;
+    font-weight: bold;
+    src: url(../fonts/DancingScript-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Source Sans Pro";
+    font-style: normal;
+    font-weight: bold;
+    src: url(../fonts/source-sans-pro/source-sans-pro.woff2);
+}
