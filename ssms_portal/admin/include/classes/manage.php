@@ -920,7 +920,7 @@ class manage
 	{
 		$data = NULL;
 
-		$q = $this->link->query("SELECT * FROM `subjects` inner join class c on subjects.class_id = c.id inner join term t on subjects.term_id = t.id ORDER BY $column $query");
+		$q = $this->link->query("SELECT * FROM `subjects` inner join class c on subjects.class_id = c.id inner join term t on subjects.term_id = t.id inner join session s on subjects.session_id = s.id ORDER BY $column $query");
 
 		$info = [];
 		$infos = [];
@@ -935,6 +935,7 @@ class manage
 					<tr>
 						<td>' . $infos[0] . '</td>
 						<td>' . $infos['class'] . '</td>
+						<td>' . $infos['session'] . '</td>
 						<td>' . $infos['term'] . '</td>
 						<td class="subject">' . $infos['subject'] . '</td>
 						<td>
@@ -952,6 +953,7 @@ class manage
 				<tr>
 					<td>-</td>
 					<td>no class data</td>
+					<td>no session data</td>
 					<td>no term data</td>
 					<td>no subject data</td>
 					<td>
@@ -1201,24 +1203,33 @@ class manage
 		return (['data' => $data]);
 	}
 
-	public function addSubject($class, $term, $subject)
+	/**
+	 * @param $class
+	 * @param $session
+	 * @param $term
+	 * @param $subject
+	 * @return array
+	 */
+	public function addSubject($class, $session, $term, $subject)
 	{
 		$data['message'] = '';
 		$class_exists = $this->classExists($class);
+		$session_exists = $this->sessionExists($session);
 		$term_exists = $this->termExists($term);
 
-		if ($class_exists && $term_exists) {
-			$q = $this->link->query("SELECT * FROM `subjects` WHERE (class_id = '{$class}' AND `term_id` = '{$term}' AND `subject` = '{$subject}')");
+		if ($class_exists && $session_exists && $term_exists) {
+			$q = $this->link->query("SELECT * FROM `subjects` WHERE (class_id = '{$class}' AND `session_id` = '{$session}' AND `term_id` = '{$term}' AND `subject` = '{$subject}')");
 			if ($q->num_rows < 1) {
-				$q = $this->link->query("INSERT INTO `subjects` (`id`, `class_id`, `term_id`, `subject`) VALUES (NULL, '{$class}', '{$term}', '{$subject}')");
+				$q = $this->link->query("INSERT INTO `subjects` (`id`, `class_id`, `session_id`, `term_id`, `subject`) VALUES (NULL, '{$class}', '{$session}', '{$term}', '{$subject}')");
 				if ($q) {
-					$q = $this->link->query("SELECT * FROM `subjects` inner join class c on subjects.class_id = c.id inner join term t on subjects.term_id = t.id WHERE (class_id = '{$class}' AND `term_id` = '{$term}' AND `subject` = '{$subject}')");
+					$q = $this->link->query("SELECT * FROM `subjects` inner join class c on subjects.class_id = c.id inner join session s on subjects.session_id = s.id inner join term t on subjects.term_id = t.id WHERE (class_id = '{$class}' AND `session_id` = '{$session}' AND `term_id` = '{$term}' AND `subject` = '{$subject}')");
 					$row = $q->fetch_array();
 					$data['message'] = '
 						<script>
 							alert(""+
 							    "Subject added successfully!!!\r\n"+
 								"Class: ' . $row['class'] . '\r\n"+
+								"Session: ' . $row['session'] . '\r\n"+
 								"Term: ' . $row['term'] . '\r\n"+
 								"Subject name: ' . $row['subject'] . '\r\n"+
 							"");
@@ -1238,7 +1249,7 @@ class manage
 
 			} else {
 				$row = $q->fetch_array();
-				$data['message'] = 'This Subject for selected Class and Term already exists.' . "\r\n" . 'Do you want to edit it?';
+				$data['message'] = 'This Subject for selected Class, Session and Term already exists.' . "\r\n" . 'Do you want to edit it?';
 				$data['id'] = $row['id'];
 				$data['status'] = '400';
 			}
@@ -1248,6 +1259,14 @@ class manage
 				$data['message'] .= '
 					<script>
 						alert("The selected class doesn\'t exist or hasn\'t been created yet!!!");
+					</script>
+				';
+			}
+
+			if (!$session_exists) {
+				$data['message'] .= '
+					<script>
+						alert("The selected session doesn\'t exist or hasn\'t been created yet!!!");
 					</script>
 				';
 			}
@@ -1899,18 +1918,20 @@ class manage
 	/**
 	 * @param $subject_id
 	 * @param $class
+	 * @param $session
 	 * @param $term
 	 * @param $subject
 	 * @return array
 	 */
-	public function updateSubject($subject_id, $class, $term, $subject)
+	public function updateSubject($subject_id, $class, $session, $term, $subject)
 	{
 		$data['message'] = '';
 		$class_exists = $this->classExists($class);
+		$session_exists = $this->sessionExists($session);
 		$term_exists = $this->termExists($term);
 
-		if ($class_exists && $term_exists) {
-			$q = $this->link->query("UPDATE `subjects` SET `class_id` = '{$class}', `term_id` = '{$term}', `subject` = '{$subject}' WHERE `id` = '{$subject_id}'");
+		if ($class_exists && $session_exists && $term_exists) {
+			$q = $this->link->query("UPDATE `subjects` SET `class_id` = '{$class}', `session_id` = '{$session}', `term_id` = '{$term}', `subject` = '{$subject}' WHERE `id` = '{$subject_id}'");
 
 			if ($q) {
 				$data['message'] = '
@@ -1944,6 +1965,18 @@ class manage
 						<small>
 							<i class="fa fa-exclamation-circle"></i>
 							The selected class doesn\'t exist or hasn\'t bee created yet!!!<br />
+							<small>Click to dismiss</small>
+						</small>
+					</div>
+				';
+			}
+
+			if (!$session_exists) {
+				$data['message'] = '
+					<div class="alert alert-danger remove">
+						<small>
+							<i class="fa fa-exclamation-circle"></i>
+							The selected session doesn\'t exist or hasn\'t bee created yet!!!<br />
 							<small>Click to dismiss</small>
 						</small>
 					</div>
@@ -2000,6 +2033,8 @@ class manage
 	public function getAverage($student, $class, $session, $term)
 	{
 		$data['message'] = NULL;
+		$infos = NULL;
+		$info = NULL;
 
 		$q = $this->link->query("SELECT SUM(`total`) AS `cumulative_total` FROM `student_results` WHERE `student_id` = '{$student}' AND `class_id` = '{$class}' AND `session_id` = '{$session}' AND `term_id` = '{$term}'");
 
@@ -2017,7 +2052,23 @@ class manage
 				if ($q && $data['subject_count'] > 0) {
 
 					if (($data['result_subject_count'] == $data['subject_count'])) {
-						$data['average'] = $data['cumulative_total'] / $data['result_subject_count'];
+						$average = $data['average'] = $data['cumulative_total'] / $data['result_subject_count'];
+
+						$q = $this->link->query("SELECT `average` FROM `result_computation` 	WHERE `class_id` = '{$class}' AND `session_id` = '{$session}' AND `term_id` = '{$term}'");
+
+						if ($q && $q->num_rows > 0) {
+							while ($row = $q->fetch_array()) {
+								$infos[] = $row;
+							}
+							$data['info'] = $infos;
+
+							foreach ($data['info'] as $infos) {
+								$info[] = $infos['average'];
+							}
+							$data['info'] = $info;
+						}
+
+						$q = $this->link->query("INSERT INTO `result_computation` (id, student_id, class_id, session_id, term_id, total, average, position) VALUES (NULL, '{$student}', '{$class}', '{$session}', '{$term}', '', '{$average}', '')");
 						$data['message'] = $data['average'];
 						$data['status'] = '200';
 
@@ -2283,6 +2334,13 @@ class manage
 				';
 			}
 			$data['info'] = $info;
+
+			$q = $this->link->query("SELECT * FROM `result_computation` WHERE `student_id` = '{$student}' AND `class_id` = '{$class}' AND `session_id` = '{$session}' AND `term_id` = '{$term}'");
+
+			if ($q && $q->num_rows > 0) {
+				$row = $q->fetch_array();
+				$data['average'] = $row['average'];
+			}
 
 		} else {
 			$data['info'] = 'Nothing';
@@ -2854,7 +2912,7 @@ if ((isset($_POST) || isset($_GET)) && (!empty($_POST['action']) || !empty($_GET
 
 	if ($action == 'add-subject') {
 		$add_subject = new manage($connect);
-		$data['add_subject'] = $add_subject->addSubject($class, $term, $subject);
+		$data['add_subject'] = $add_subject->addSubject($class, $session, $term, $subject);
 		echo json_encode(['data' => $data]);
 	}
 
@@ -3558,7 +3616,7 @@ if ((isset($_POST) || isset($_GET)) && (!empty($_POST['action']) || !empty($_GET
 				</script>
 			';
 			$subject_update = new manage($connect);
-			$data['subject_update'] = $subject_update->updateSubject($subject_id, $class, $term, $subject);
+			$data['subject_update'] = $subject_update->updateSubject($subject_id, $class, $session, $term, $subject);
 			$data['status'] = '200';
 
 		} else {
@@ -3900,7 +3958,7 @@ if ((isset($_POST) || isset($_GET)) && (!empty($_POST['action']) || !empty($_GET
 
 	if ($action == 'view-result') {
 		$result = new manage($connect);
-		$data['view_result'] = $result->viewResults(1, 3, 2, 1);
+		$data['view_result'] = $result->viewResults($student_id, $class_id, $session_id, $term_id);
 		echo json_encode(['data' => $data]);
 	}
 }
