@@ -28,8 +28,9 @@
 					<table class="table table-hover table-striped table-borderless table-sm table-light subject-table">
 						<thead class="thead-dark">
 						<tr>
-							<th class="j-link" id="id">#</th>
+							<th class="j-link" id="subjects.id">#</th>
 							<th class="j-link" id="class">Class</th>
+							<th class="j-link" id="session">Session</th>
 							<th class="j-link" id="term">Term</th>
 							<th class="j-link" id="subject">Subject</th>
 							<th><i class="fa fa-pencil mx-1"></i> Edit</th>
@@ -37,6 +38,7 @@
 						</thead>
 						<tbody id="subject-data" style="display: ">
 						<tr>
+							<td><img src="./design/imgs/805.svg" alt="" width="30px"></td>
 							<td><img src="./design/imgs/805.svg" alt="" width="30px"></td>
 							<td><img src="./design/imgs/805.svg" alt="" width="30px"></td>
 							<td><img src="./design/imgs/805.svg" alt="" width="30px"></td>
@@ -70,11 +72,21 @@
 						</div>
 
 						<div class="form-group">
+							<label for="session_sel">Session: </label>
+							<div class="input-group">
+								<i class="p-2 far fa-calendar-alt"></i>
+								<select name="session" id="session_sel" class="form-control form-control-sm" required disabled>
+									<option value="" selected disabled>Select a class first...</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
 							<label for="term_sel">Term: </label>
 							<div class="input-group">
 								<i class="p-2 far fa-calendar-day"></i>
 								<select name="term" id="term_sel" class="form-control form-control-sm" required disabled>
-									<option value="" selected disabled>Select a class first...</option>
+									<option value="" selected disabled>Select Class and Session first...</option>
 								</select>
 							</div>
 						</div>
@@ -259,32 +271,47 @@
 				});
 			}
 
-			function loadSchoolClassAndTerms() {
+			function loadSchoolClassSessionsAndTerms() {
 				let term = $('#term_sel'),
 					subject = $('#subject_inp'),
-					class_sel = $('#class_sel');
+					class_sel = $('#class_sel'),
+					session = $('#session_sel');
 
 				$.post('./include/stu_classes.php', {
 					action: 'get-classes'
 				}, function (response) {
 					class_sel.append(response);
 					class_sel.change(function () {
-						if (term.attr('disabled')) {
-							term.removeAttr('disabled');
-							subject.attr('placeholder', 'Select a Term...');
-							term.children(':selected').text('Select Term...');
+						if (session.attr('disabled')) {
+							session.removeAttr('disabled');
+							session.children(':selected').text('Select Session...');
+							term.children(':selected').text('Select a Session...');
+							subject.attr('placeholder', 'Select Session and Term...');
 						}
 					});
 
 					$.post('./include/school_session_term.php', {
-						action: 'get-terms'
+						action: 'get-sessions'
 					}, function (response) {
-						term.append(response);
-						term.change(function () {
-							if (subject.attr('disabled')) {
-								subject.removeAttr('disabled');
-								subject.attr('placeholder', 'Input Subject name...');
+						session.append(response);
+						session.change(function () {
+							if (term.attr('disabled')) {
+								term.removeAttr('disabled');
+								term.children(':selected').text('Select a Term...');
+								subject.attr('placeholder', 'Select a Term...');
 							}
+						});
+
+						$.post('./include/school_session_term.php', {
+							action: 'get-terms'
+						}, function (response) {
+							term.append(response);
+							term.change(function () {
+								if (subject.attr('disabled')) {
+									subject.removeAttr('disabled');
+									subject.attr('placeholder', 'Input Subject name...');
+								}
+							});
 						});
 					});
 				});
@@ -436,11 +463,11 @@
 								valid_text = $('.valid-text'),
 								valid_text_html = valid_text.html();
 
-							loadSchoolClassAndTerms();
+							loadSchoolClassSessionsAndTerms();
 							setTimeout(function () {
 								$.each(info, function (index, value) {
-									// let new_amount = accounting.formatNumber(value.amount, 0);
 									$(element + ' #class_sel option[value=' + value.class_id + ']').prop('selected', 'selected');
+									$(element + ' #session_sel option[value=' + value.session_id + ']').prop('selected', 'selected');
 									$(element + ' #term_sel option[value=' + value.term_id + ']').prop('selected', 'selected');
 									$(element + ' #subject_inp').val(value.subject);
 								});
@@ -505,7 +532,7 @@
 			});
 
 			manageSubjects('subjects.id', 'ASC', 'fresh');
-			loadSchoolClassAndTerms();
+			loadSchoolClassSessionsAndTerms();
 			// formatAmountInput();
 			toggleVisibility();
 			orderSubjects();

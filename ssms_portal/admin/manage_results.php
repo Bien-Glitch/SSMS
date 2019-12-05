@@ -110,139 +110,142 @@
 		<!--				</div>-->
 		<!--			</div>-->
 		<!--		</div>-->
-		<form action="./include/classes/manage.php" method="post" id="update-result-form">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="class_sel">Class: </label>
-						<div class="input-group">
-							<i class="p-2 fad fa-users-class"></i>
-							<select name="class" id="class_sel" class="form-control form-control-sm">
-								<option value="" selected disabled>Select Class...</option>
-							</select>
-						</div>
-						<div id="class_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
-							<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="session_sel" disabled="">Session: </label>
-						<div class="input-group">
-							<i class="p-2 fad fa-calendar-alt"></i>
-							<select name="session" id="session_sel" class="form-control form-control-sm" disabled>
-								<option value="" selected disabled>Select a class first...</option>
-							</select>
-						</div>
-						<div id="session_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
-							<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="term_sel">Term: </label>
-						<div class="input-group">
-							<i class="p-2 fad fa-calendar-day"></i>
-							<select name="term" id="term_sel" class="form-control form-control-sm" disabled>
-								<option value="" selected disabled>Select a session first...</option>
-							</select>
-						</div>
-						<div id="term_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
-							<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="stu_sel">Student: </label>
-						<div class="input-group">
-							<i class="p-2 fad fa-user-graduate"></i>
-							<select name="student" id="stu_sel" class="form-control form-control-sm" disabled>
-								<option value="" selected disabled>Select a class and term first...</option>
-							</select>
-						</div>
-						<div id="stu_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
-							<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<br />
-			<div class="s-border-top s-border-bottom my-md-5 mb-5 p-4">
+		<?php if (($a_type == 'admin') || ($a_type == 'teacher') || ($a_type == 'exam officer')) { ?>
+			<form action="./include/classes/manage.php" method="post" id="update-result-form">
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-6">
 						<div class="form-group">
-							<label for="sub_sel">Subject: </label>
+							<label for="class_sel">Class: </label>
 							<div class="input-group">
-								<i class="p-2 fad fa-book-alt"></i>
-								<select name="sub" id="sub_sel" class="form-control form-control-sm" disabled>
-									<option value="" selected disabled>Select a Class and term first...</option>
+								<i class="p-2 fad fa-users-class"></i>
+								<select name="class" id="class_sel" class="form-control form-control-sm">
+									<option value="" selected disabled>Select Class...</option>
 								</select>
 							</div>
-							<div id="sub_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
+							<div id="class_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
 								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
 							</div>
 						</div>
 					</div>
 
-					<div class="col-md-3">
+					<div class="col-md-6">
 						<div class="form-group">
-							<label for="ca_one">CA 1 Score: </label>
+							<label for="session_sel" disabled="">Session: </label>
 							<div class="input-group">
-								<input name="ca_one" id="ca_one" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
+								<i class="p-2 fad fa-calendar-alt"></i>
+								<select name="session" id="session_sel" class="form-control form-control-sm" disabled>
+									<option value="" selected disabled>Select a class first...</option>
+								</select>
 							</div>
-							<div id="ca_oneValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
-								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-3">
-						<div class="form-group">
-							<label for="ca_two">CA 2 Score: </label>
-							<div class="input-group">
-								<input name="ca_two" id="ca_two" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
-							</div>
-							<div id="ca_twoValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
-								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-md-3">
-						<div class="form-group">
-							<label for="exam">Exam Score: </label>
-							<div class="input-group">
-								<input name="exam" id="exam" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
-							</div>
-							<div id="examValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
+							<div id="session_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
 								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<div class="form-group">
-				<button type="submit" class="btn btn-primary btn-sm my-md-0 my-1"><i class="far fa-arrow-alt-circle-right"></i> Upload Result</button>
-				<a id="compute-result" class="j-link btn btn-danger btn-sm my-md-0 my-1"><i class="fa fa-calculator"></i> Compute Result</a>
-			</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="term_sel">Term: </label>
+							<div class="input-group">
+								<i class="p-2 fad fa-calendar-day"></i>
+								<select name="term" id="term_sel" class="form-control form-control-sm" disabled>
+									<option value="" selected disabled>Select a session first...</option>
+								</select>
+							</div>
+							<div id="term_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
+								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+							</div>
+						</div>
+					</div>
 
-			<div class="form-group">
-				<a href="./all_stu_results"><i class="fa fa-arrow-alt-circle-right"></i> View Results</a>
-			</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="stu_sel">Student: </label>
+							<div class="input-group">
+								<i class="p-2 fad fa-user-graduate"></i>
+								<select name="student" id="stu_sel" class="form-control form-control-sm" disabled>
+									<option value="" selected disabled>Select a class and term first...</option>
+								</select>
+							</div>
+							<div id="stu_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
+								<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<br />
+				<div class="s-border-top s-border-bottom my-md-5 mb-5 p-4">
+					<div class="row">
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="sub_sel">Subject: </label>
+								<div class="input-group">
+									<i class="p-2 fad fa-book-alt"></i>
+									<select name="sub" id="sub_sel" class="form-control form-control-sm" disabled>
+										<option value="" selected disabled>Select a Class and term first...</option>
+									</select>
+								</div>
+								<div id="sub_selValidate" class="valid-text ml-4 my-1 py-1 px-2 w3-round alert" style="display:none">
+									<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+								</div>
+							</div>
+						</div>
 
-			<div id="mess" style="display:none">
-				<span class="text-info"><i class="text-danger fa fa-exclamation"></i> Please wait...</span>
-			</div>
-		</form>
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="ca_one">CA 1 Score: </label>
+								<div class="input-group">
+									<input name="ca_one" id="ca_one" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
+								</div>
+								<div id="ca_oneValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
+									<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="ca_two">CA 2 Score: </label>
+								<div class="input-group">
+									<input name="ca_two" id="ca_two" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
+								</div>
+								<div id="ca_twoValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
+									<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="exam">Exam Score: </label>
+								<div class="input-group">
+									<input name="exam" id="exam" class="form-control form-control-sm" placeholder="Select Subject first..." disabled />
+								</div>
+								<div id="examValidate" class="valid-text my-1 py-1 px-2 w3-round alert" style="display:none">
+									<div class="d-flex justify-content-between"><span><i class="fa fa-times-circle"></i></span></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary btn-sm my-md-0 my-1"><i class="far fa-arrow-alt-circle-right"></i> Upload Result</button>
+					<a id="compute-result" class="j-link btn btn-danger btn-sm my-md-0 my-1"><i class="fa fa-calculator"></i> Compute Result</a>
+				</div>
+
+
+				<div id="mess" style="display:none">
+					<span class="text-info"><i class="text-danger fa fa-exclamation"></i> Please wait...</span>
+				</div>
+			</form>
+		<?php } ?>
+
+		<div class="form-group">
+			<a href="./all_stu_results"><i class="fa fa-arrow-alt-circle-right"></i> View Results</a>
+		</div>
 	</div>
 
 	<script>
@@ -667,6 +670,7 @@
 
 					computeResult('compute-result', class_id, session_id, term_id, student_id);
 				});
+
 				classes();
 			}
 
@@ -771,6 +775,10 @@
 				// toggleVisibility();
 			});
 
+			localStorage.removeItem('class_id');
+			localStorage.removeItem('session_id');
+			localStorage.removeItem('term_id');
+			localStorage.removeItem('subject_id');
 			loadSchoolClassSessionsTermsStudentsAndSubjects();
 			// formatAmountInput();
 			// toggleVisibility();
