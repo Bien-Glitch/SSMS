@@ -1,11 +1,11 @@
 <?php include './include/header.php'; ?>
 <?php
-	if (!$user) {
-		# code...
-		require_once './include/template/login.php';
-		echo '<script src="./design/js/student.js"></script>';
-		exit();
-	}
+if (!$user) {
+	# code...
+	require_once './include/template/login.php';
+	echo '<script src="./design/js/student.js"></script>';
+	exit();
+}
 ?>
 
 	<body>
