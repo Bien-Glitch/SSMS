@@ -67,9 +67,10 @@
 
 			if ($student_exists) {
 				$user_passcode = md5($user_passcode);
-				$q = $this->link->query("SELECT * FROM `students` WHERE `adm_id` = '{$user_login}' AND `pcode` = '{$user_passcode}' LIMIT 1");
+				$q = $this->link->query("SELECT * FROM `students` WHERE (`adm_id` = '{$user_login}' AND `pcode` = '{$user_passcode}')");
 
 				if ($q && $q->num_rows > 0) {
+					$row = $q->fetch_array();
 					$_SESSION['user_login'] = $user_login;
 
 					$data['message'] .= '
@@ -79,6 +80,7 @@
 							
 							$("#login-form #loginValidate").fadeOut();
 							$("#login-form #pcodeValidate").fadeOut();
+							localStorage.setItem(\'student_id\', "'.$row['id'].'");
 						</script>
 						<div class="alert alert-success">
 							<small>
@@ -103,7 +105,7 @@
 						';
 					}
 
-					if ($q->num_rows < 0) {
+					if ($q->num_rows < 1) {
 						$data['message'] = '
 							<script>$("#login-form #pcode").addClass("regerr").focus();</script>
 							<div class="alert alert-danger remove">
