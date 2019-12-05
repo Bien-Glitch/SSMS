@@ -80,7 +80,7 @@
 							
 							$("#login-form #loginValidate").fadeOut();
 							$("#login-form #pcodeValidate").fadeOut();
-							localStorage.setItem(\'student_id\', "'.$row['id'].'");
+							localStorage.setItem(\'log_student_id\', "'.$row['id'].'");
 						</script>
 						<div class="alert alert-success">
 							<small>
