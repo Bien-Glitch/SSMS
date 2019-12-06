@@ -26,8 +26,15 @@ Secondary School Online Portal and Management System
   # Student Accounts:
     1:- 
       id number: JSS3/001
-      password: password
+      password: DoP8eRaC
       
     2:- 
       id number: JSS3/002
-      password: password
+      password: DoP8eRaC
+
+# Admin Signup Secret Keys:
+  1 Full Admin:- admin@bolt2019admin*
+  2 Principal:- admin@bolt2019principal-
+  3 Teacher:- admin@bolt2019teacher+
+  4 Exam Officer:- admin@bolt2019examofficer=
+  5 Bursar:- admin@bolt2019exambursar0
